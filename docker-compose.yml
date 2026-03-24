@@ -1,0 +1,60 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: lms_app
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+      - "443:443"
+      - "5173:5173"
+    volumes:
+      - ./:/var/www/html
+    environment:
+      - DB_CONNECTION=mysql
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_DATABASE=lms_guilalva
+      - DB_USERNAME=root
+      - DB_PASSWORD=secret
+    depends_on:
+      - db
+    networks:
+      - lms-network
+
+  db:
+    image: mysql:8.0
+    container_name: lms_db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: lms_guilalva
+      MYSQL_ROOT_PASSWORD: secret
+    ports:
+      - "3306:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d
+    networks:
+      - lms-network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: lms_phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: secret
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+    networks:
+      - lms-network
+
+networks:
+  lms-network:
+    driver: bridge
+
+volumes:
+  dbdata:
