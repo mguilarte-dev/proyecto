@@ -66,8 +66,8 @@ const deleteLesson = (id) => {
                                 <td class="px-6 py-4 dark:text-gray-300">{{ lesson.lesson_order }}</td>
                                 <td class="px-6 py-4 dark:text-gray-300 font-bold">{{ lesson.title }}</td>
                                 <td class="px-6 py-4 dark:text-gray-300 uppercase text-xs">{{ lesson.content_type }}</td>
-                                <td class="px-6 py-4 text-right">
-                                    <Link :href="route('admin.lessons.edit', lesson.id)" class="text-blue-600 hover:underline mr-4">Editar</Link>
+                                <td class="px-6 py-4 text-right space-x-2">
+                                    <Link :href="route('admin.lessons.edit', lesson.id)" class="text-blue-600 hover:underline mr-2">Editar</Link>
                                     <button @click="deleteLesson(lesson.id)" class="text-red-600 font-medium">Eliminar</button>
                                 </td>
                             </tr>

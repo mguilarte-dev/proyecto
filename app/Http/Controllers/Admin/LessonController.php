@@ -54,6 +54,14 @@ class LessonController extends Controller
         ]);
     }
 
+    public function show(Lesson $lesson)
+    {
+        return Inertia::render('Admin/Lessons/Show', [
+            'lesson' => $lesson,
+            'course' => $lesson->course
+        ]);
+    }
+
     public function update(Request $request, Lesson $lesson)
     {
         $request->validate([

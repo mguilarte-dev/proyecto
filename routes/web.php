@@ -38,6 +38,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
         'destroy' => 'admin.users.destroy',
     ]);
 
+    Route::post('users/{user}/reset-password', [\App\Http\Controllers\Admin\UserController::class, 'resetPassword'])->name('admin.users.reset-password');
+    Route::patch('users/{user}/email', [\App\Http\Controllers\Admin\UserController::class, 'updateEmail'])->name('admin.users.update-email');
+
     Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class)->names('admin.categories');
     Route::resource('courses', \App\Http\Controllers\Admin\CourseController::class)->names('admin.courses');
     Route::resource('areas', \App\Http\Controllers\Admin\AreaController::class)->names('admin.areas');

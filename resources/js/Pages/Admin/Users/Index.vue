@@ -13,6 +13,21 @@ const deleteUser = (id) => {
         form.delete(route('admin.users.destroy', id));
     }
 };
+
+const resetPassword = (user) => {
+    if (confirm(`¿Generar nueva contraseña aleatoria para ${user.name} y enviarla por email?`)) {
+        form.post(route('admin.users.reset-password', user.id));
+    }
+};
+
+const updateEmail = (user) => {
+    const newEmail = prompt('Nuevo email:', user.email);
+    if (newEmail && newEmail !== user.email) {
+        form.patch(route('admin.users.update-email', user.id), {
+            email: newEmail
+        });
+    }
+};
 </script>
 
 <template>
@@ -56,8 +71,10 @@ const deleteUser = (id) => {
                                         }">{{ user.role }}</span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">{{ user.department || '-' }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <Link :href="route('admin.users.edit', user.id)" class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 mr-4">Editar</Link>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                                        <button @click="resetPassword(user)" class="text-orange-600 hover:text-orange-900 dark:text-orange-400">Reset Password</button>
+                                        <button @click="updateEmail(user)" class="text-purple-600 hover:text-purple-900 dark:text-purple-400">Cambiar Email</button>
+                                        <Link :href="route('admin.users.edit', user.id)" class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400">Editar</Link>
                                         <button @click="deleteUser(user.id)" class="text-red-600 hover:text-red-900 dark:text-red-400">Eliminar</button>
                                     </td>
                                 </tr>

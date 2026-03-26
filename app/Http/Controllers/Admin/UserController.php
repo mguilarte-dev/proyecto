@@ -6,8 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
+use App\Mail\NewPasswordGenerated;
 
 class UserController extends Controller
 {
@@ -19,6 +22,24 @@ class UserController extends Controller
         $users = User::orderBy('created_at', 'desc')->paginate(10);
         return Inertia::render('Admin/Users/Index', [
             'users' => $users
+        ]);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        return Inertia::render('Admin/Users/Create');
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(User $user)
+    {
+        return Inertia::render('Admin/Users/Edit', [
+            'user' => $user
         ]);
     }
 
@@ -78,5 +99,36 @@ class UserController extends Controller
 
         $user->delete();
         return redirect()->route('admin.users.index')->with('message', 'Usuario eliminado exitosamente.');
+    }
+
+    /**
+     * Generate a new random password for the user and send it via email.
+     */
+    public function resetPassword(User $user)
+    {
+        $newPassword = Str::random(12); // Generate random 12-character password
+
+        $user->update([
+            'password' => Hash::make($newPassword)
+        ]);
+
+        // Send email with new password
+        Mail::to($user->email)->send(new NewPasswordGenerated($user, $newPassword));
+
+        return redirect()->back()->with('message', 'Nueva contraseña generada y enviada por email al usuario.');
+    }
+
+    /**
+     * Update user email.
+     */
+    public function updateEmail(Request $request, User $user)
+    {
+        $request->validate([
+            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
+        ]);
+
+        $user->update(['email' => $request->email]);
+
+        return redirect()->back()->with('message', 'Email del usuario actualizado exitosamente.');
     }
 }
