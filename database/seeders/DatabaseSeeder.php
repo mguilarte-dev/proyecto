@@ -22,29 +22,33 @@ class DatabaseSeeder extends Seeder
         $firstArea = \App\Models\Area::first();
 
         // Categorías por defecto
-        Category::create([
-            'name' => 'Inteligencia Artificial',
+        Category::firstOrCreate([
+            'name' => 'Inteligencia Artificial'
+        ], [
             'description' => 'Cursos relacionados con IA, Machine Learning y Automatización.'
         ]);
 
-        Category::create([
-            'name' => 'Elearning',
+        Category::firstOrCreate([
+            'name' => 'Elearning'
+        ], [
             'description' => 'Metodologías de enseñanza digital y gestión de plataformas de aprendizaje.'
         ]);
 
         // Administrador por defecto
-        User::create([
+        User::firstOrCreate([
+            'email' => 'admin@example.com'
+        ], [
             'name' => 'Administrador',
-            'email' => 'admin@example.com',
             'password' => Hash::make('admin123'),
             'role' => 'admin',
             'area_id' => $firstArea->id
         ]);
 
         // Usuario de prueba (Empleado)
-        User::create([
+        User::firstOrCreate([
+            'email' => 'test@example.com'
+        ], [
             'name' => 'Test User',
-            'email' => 'test@example.com',
             'password' => Hash::make('password'),
             'role' => 'empleado',
             'area_id' => $firstArea->id

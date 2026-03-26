@@ -45,6 +45,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     // Lessons Nested Routes
     Route::get('courses/{course}/lessons', [\App\Http\Controllers\Admin\LessonController::class, 'index'])->name('admin.courses.lessons.index');
     Route::post('courses/{course}/lessons', [\App\Http\Controllers\Admin\LessonController::class, 'store'])->name('admin.courses.lessons.store');
+    Route::get('lessons/{lesson}/edit', [\App\Http\Controllers\Admin\LessonController::class, 'edit'])->name('admin.lessons.edit');
+    Route::put('lessons/{lesson}', [\App\Http\Controllers\Admin\LessonController::class, 'update'])->name('admin.lessons.update');
     Route::delete('lessons/{lesson}', [\App\Http\Controllers\Admin\LessonController::class, 'destroy'])->name('admin.lessons.destroy');
 
     // Evaluations

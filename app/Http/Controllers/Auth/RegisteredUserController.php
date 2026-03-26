@@ -22,8 +22,14 @@ class RegisteredUserController extends Controller
      */
     public function create(): Response
     {
+        try {
+            $areas = Area::all(['id', 'name']);
+        } catch (\Exception $e) {
+            $areas = [];
+        }
+
         return Inertia::render('Auth/Register', [
-            'areas' => Area::all(['id', 'name'])
+            'areas' => $areas
         ]);
     }
 
