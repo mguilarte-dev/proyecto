@@ -30,6 +30,10 @@ const addAnswer = (qIndex) => {
     form.questions[qIndex].answers.push({ text: '', is_correct: false });
 };
 
+const removeAnswer = (qIndex, aIndex) => {
+    form.questions[qIndex].answers.splice(aIndex, 1);
+};
+
 const submit = () => {
     form.post(route('admin.courses.evaluations.store', props.course.id), {
         onSuccess: () => {
@@ -106,6 +110,7 @@ const submit = () => {
                                 <div v-for="(a, aIdx) in q.answers" :key="aIdx" class="flex items-center gap-2">
                                     <input type="checkbox" v-model="a.is_correct" class="rounded text-blue-600" />
                                     <input v-model="a.text" type="text" class="flex-1 rounded border-gray-300 text-sm dark:bg-gray-800 dark:text-white" placeholder="Texto de la respuesta..." required />
+                                    <button type="button" @click="removeAnswer(qIdx, aIdx)" class="text-red-500 text-xs hover:text-red-700" v-if="q.answers.length > 1">Eliminar</button>
                                 </div>
                                 <button type="button" @click="addAnswer(qIdx)" class="text-xs text-blue-500 mt-2"> + Añadir opción</button>
                             </div>

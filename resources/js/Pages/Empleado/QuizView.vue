@@ -24,13 +24,19 @@ watch(() => page.props.flash.quiz_result, (newVal) => {
 
 const submit = () => {
     const result = {
-        answers: Object.values(form.answers)
+        answers: Object.values(form.answers).filter(answer => answer !== null)
     };
     form.transform((data) => result).post(route('empleado.quizzes.submit', props.evaluation.id), {
         onSuccess: () => {
             // Modal handled by watcher
         }
     });
+};
+
+const handleRadioClick = (questionId, answerId) => {
+    if (form.answers[questionId] === answerId) {
+        form.answers[questionId] = null;
+    }
 };
 
 const goToCourse = () => {
@@ -66,14 +72,15 @@ const goToCourse = () => {
                                            v-model="form.answers[question.id]" 
                                            :name="'question_' + question.id" 
                                            :value="answer.id" 
-                                           class="text-blue-600" required />
+                                           @click="handleRadioClick(question.id, answer.id)"
+                                           class="text-blue-600" />
                                     <span class="ml-3 dark:text-gray-200">{{ answer.answer_text }}</span>
                                 </label>
                             </div>
                         </div>
 
                         <div class="pt-8 border-t dark:border-gray-700 flex flex-col items-center">
-                            <p class="text-sm text-gray-500 mb-4">Asegúrate de haber respondido todas las preguntas antes de enviar.</p>
+                            <p class="text-sm text-gray-500 mb-4">Puedes dejar preguntas sin responder si no estás seguro. Haz clic en una opción seleccionada para deseleccionarla.</p>
                             <button class="w-full md:w-auto px-12 py-3 bg-purple-600 text-white font-bold rounded-full hover:bg-purple-700 shadow-lg transition" :disabled="form.processing">
                                 Finalizar y Enviar Evaluación
                             </button>
