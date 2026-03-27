@@ -6,12 +6,17 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 
+const props = defineProps({
+    areas: Array,
+});
+
 const form = useForm({
     name: '',
     email: '',
     password: '',
     role: 'empleado',
     department: '',
+    area_id: '',
 });
 
 const submit = () => {
@@ -61,6 +66,15 @@ const submit = () => {
                                 <option value="empleado">Empleado</option>
                             </select>
                             <InputError class="mt-2" :message="form.errors.role" />
+                        </div>
+
+                        <div class="mt-4">
+                            <InputLabel for="area_id" value="Área" />
+                            <select id="area_id" v-model="form.area_id" class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                                <option value="">Seleccionar área</option>
+                                <option v-for="area in props.areas" :key="area.id" :value="area.id">{{ area.name }}</option>
+                            </select>
+                            <InputError class="mt-2" :message="form.errors.area_id" />
                         </div>
 
                         <div class="mt-4">

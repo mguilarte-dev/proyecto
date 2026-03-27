@@ -47,11 +47,11 @@ const showingNavigationDropdown = ref(false);
                                 </NavLink>
 
                                 <!-- Gerente Links -->
-                                <NavLink v-if="$page.props.auth.user.role === 'gerente'" href="#" @click.prevent="">
+                                <NavLink v-if="$page.props.auth.user.role === 'gerente'" :href="route('gerente.dashboard')" :active="route().current('gerente.dashboard')">
                                     Métricas
                                 </NavLink>
-                                <NavLink v-if="$page.props.auth.user.role === 'gerente'" href="#" @click.prevent="">
-                                    Reportes
+                                <NavLink v-if="$page.props.auth.user.role === 'gerente'" :href="route('gerente.results')" :active="route().current('gerente.results')">
+                                    Resultados
                                 </NavLink>
 
                                 <!-- Empleado Links -->
@@ -175,8 +175,11 @@ const showingNavigationDropdown = ref(false);
                         </ResponsiveNavLink>
 
                         <!-- Gerente Links -->
-                        <ResponsiveNavLink v-if="$page.props.auth.user.role === 'gerente'" href="#">
+                        <ResponsiveNavLink v-if="$page.props.auth.user.role === 'gerente'" :href="route('gerente.dashboard')" :active="route().current('gerente.dashboard')">
                             Métricas
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink v-if="$page.props.auth.user.role === 'gerente'" :href="route('gerente.results')" :active="route().current('gerente.results')">
+                            Resultados
                         </ResponsiveNavLink>
 
                         <!-- Empleado Links -->

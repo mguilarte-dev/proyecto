@@ -62,6 +62,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
 // Gerente Routes
 Route::middleware(['auth', 'role:gerente'])->prefix('gerente')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\GerenteController::class, 'dashboard'])->name('gerente.dashboard');
+    Route::get('/results', [\App\Http\Controllers\GerenteController::class, 'results'])->name('gerente.results');
 });
 
 // Empleado Routes

@@ -30,7 +30,9 @@ class UserController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Admin/Users/Create');
+        return Inertia::render('Admin/Users/Create', [
+            'areas' => \App\Models\Area::all(['id', 'name']),
+        ]);
     }
 
     /**
@@ -39,7 +41,8 @@ class UserController extends Controller
     public function edit(User $user)
     {
         return Inertia::render('Admin/Users/Edit', [
-            'user' => $user
+            'user' => $user,
+            'areas' => \App\Models\Area::all(['id', 'name']),
         ]);
     }
 
@@ -54,6 +57,7 @@ class UserController extends Controller
             'password' => 'required|string|min:8',
             'role' => ['required', Rule::in(['admin', 'gerente', 'empleado'])],
             'department' => 'nullable|string|max:100',
+            'area_id' => ['nullable', 'exists:areas,id', Rule::requiredIf(fn () => in_array($request->role, ['gerente', 'empleado']))],
         ]);
 
         User::create([
@@ -62,6 +66,7 @@ class UserController extends Controller
             'password' => Hash::make($request->password),
             'role' => $request->role,
             'department' => $request->department,
+            'area_id' => $request->area_id,
         ]);
 
         return redirect()->route('admin.users.index')->with('message', 'Usuario creado exitosamente.');
@@ -77,9 +82,10 @@ class UserController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             'role' => ['required', Rule::in(['admin', 'gerente', 'empleado'])],
             'department' => 'nullable|string|max:100',
+            'area_id' => ['nullable', 'exists:areas,id', Rule::requiredIf(fn () => in_array($request->role, ['gerente', 'empleado']))],
         ]);
 
-        $user->update($request->only('name', 'email', 'role', 'department'));
+        $user->update($request->only('name', 'email', 'role', 'department', 'area_id'));
 
         if ($request->filled('password')) {
             $user->update(['password' => Hash::make($request->password)]);
