@@ -1,0 +1,1 @@
+// useTheme composable removed - application now uses light mode only

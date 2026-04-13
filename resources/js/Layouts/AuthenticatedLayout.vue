@@ -12,9 +12,9 @@ const showingNavigationDropdown = ref(false);
 
 <template>
     <div>
-        <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
+        <div class="min-h-screen bg-primary-50">
             <nav
-                class="border-b border-gray-100 bg-white dark:border-gray-700 dark:bg-gray-800"
+                class="border-b border-primary-200 bg-white shadow-sm"
             >
                 <!-- Primary Navigation Menu -->
                 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -24,7 +24,7 @@ const showingNavigationDropdown = ref(false);
                             <div class="flex shrink-0 items-center">
                                 <Link :href="route('dashboard')">
                                     <ApplicationLogo
-                                        class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200"
+                                        class="block h-9 w-auto fill-current text-primary-700"
                                     />
                                 </Link>
                             </div>
@@ -193,13 +193,17 @@ const showingNavigationDropdown = ref(false);
                         class="border-t border-gray-200 pb-1 pt-4 dark:border-gray-600"
                     >
                         <div class="px-4">
-                            <div
-                                class="text-base font-medium text-gray-800 dark:text-gray-200"
-                            >
-                                {{ $page.props.auth.user.name }}
-                            </div>
-                            <div class="text-sm font-medium text-gray-500">
-                                {{ $page.props.auth.user.email }}
+                            <div class="flex items-center justify-between mb-3">
+                                <div>
+                                    <div
+                                        class="text-base font-medium text-gray-800 dark:text-gray-200"
+                                    >
+                                        {{ $page.props.auth.user.name }}
+                                    </div>
+                                    <div class="text-sm font-medium text-gray-500">
+                                        {{ $page.props.auth.user.email }}
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
