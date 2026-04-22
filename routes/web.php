@@ -63,6 +63,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
 Route::middleware(['auth', 'role:gerente'])->prefix('gerente')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\GerenteController::class, 'dashboard'])->name('gerente.dashboard');
     Route::get('/results', [\App\Http\Controllers\GerenteController::class, 'results'])->name('gerente.results');
+    Route::get('/export-evaluaciones-pdf', [\App\Http\Controllers\GerenteController::class, 'exportEvaluacionesPdf'])->name('gerente.export-evaluaciones-pdf');
 });
 
 // Empleado Routes

@@ -11,7 +11,8 @@ class EvaluationResult extends Model
         'user_id', 
         'evaluation_id', 
         'score', 
-        'passed', 
+        'passed',
+        'attempt_number', 
         'attempted_at'
     ];
 

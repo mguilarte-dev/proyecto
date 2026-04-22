@@ -60,6 +60,26 @@ class GerenteController extends Controller
         ]);
     }
 
+    public function exportEvaluacionesPdf(Request $request)
+    {
+        $user = auth()->user();
+        $area = $user->area;
+        $resultados = EvaluationResult::with(['user', 'evaluation.course'])
+            ->whereHas('user', function ($q) use ($user) {
+                $q->where('area_id', $user->area_id);
+            })
+            ->orderByDesc('attempted_at')
+            ->get();
+
+        $pdf = \PDF::loadView('gerente.evaluaciones_pdf', [
+            'resultados' => $resultados,
+            'area' => $area,
+            'gerente' => $user
+        ])->setPaper('a4', 'landscape');
+
+        return $pdf->download('evaluaciones_resueltas_area_' . $area->id . '.pdf');
+    }
+
     public function results()
     {
         $user = auth()->user();

@@ -10,7 +10,12 @@ const props = defineProps({
     totalLessons: Number,
     completedLessons: Number,
     completedLessonIds: Array,
-    message: String
+    message: String,
+    isPassed: Boolean,
+    isAttemptsExhausted: Boolean,
+    score: Number,
+    totalAttempts: Number,
+    maxAttempts: Number
 });
 </script>
 
@@ -34,8 +39,45 @@ const props = defineProps({
 
             <!-- Main Content -->
             <div class="bg-white rounded-2xl shadow-lg border border-primary-200 p-8">
-                <!-- Warning Icon -->
-                <div class="text-center mb-6">
+                <!-- Success Icon (If Already Passed) -->
+                <div v-if="isPassed" class="text-center mb-6">
+                    <div class="mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-success-100 mb-4">
+                        <svg class="h-10 w-10 text-success-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <h2 class="text-xl font-semibold text-neutral-900 mb-2">
+                        Evaluación Completada
+                    </h2>
+                    <p class="text-neutral-600 max-w-md mx-auto mb-4">
+                        {{ message }}
+                    </p>
+                    <div class="bg-success-50 rounded-xl p-4 mb-4">
+                        <p class="text-sm text-neutral-600 mb-1">Tu puntaje fue:</p>
+                        <p class="text-3xl font-bold text-success-600">{{ score }}%</p>
+                    </div>
+                </div>
+
+                <!-- Attempts Exhausted Icon -->
+                <div v-else-if="isAttemptsExhausted" class="text-center mb-6">
+                    <div class="mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-error-100 mb-4">
+                        <svg class="h-10 w-10 text-error-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                        </svg>
+                    </div>
+                    <h2 class="text-xl font-semibold text-neutral-900 mb-2">
+                        Intentos Agotados
+                    </h2>
+                    <p class="text-neutral-600 max-w-md mx-auto mb-4">
+                        {{ message }}
+                    </p>
+                    <div class="bg-error-50 rounded-xl p-4">
+                        <p class="text-sm text-neutral-600">Intentos utilizados: {{ totalAttempts }} / {{ maxAttempts }}</p>
+                    </div>
+                </div>
+
+                <!-- Default Warning Icon (Lessons Not Completed) -->
+                <div v-else class="text-center mb-6">
                     <div class="mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-warning-100 mb-4">
                         <svg class="h-10 w-10 text-warning-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
@@ -50,7 +92,7 @@ const props = defineProps({
                 </div>
 
                 <!-- Progress Info -->
-                <div class="bg-neutral-50 rounded-xl p-6 mb-6">
+                <div v-if="!isPassed && !isAttemptsExhausted" class="bg-neutral-50 rounded-xl p-6 mb-6">
                     <h3 class="text-lg font-semibold text-neutral-900 mb-4">
                         Progreso de Visualización del Material
                     </h3>
@@ -103,23 +145,37 @@ const props = defineProps({
 
                 <!-- Actions -->
                 <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                    <Link :href="route('empleado.courses.show', course.id)">
-                        <PrimaryButton class="w-full sm:w-auto">
-                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                            </svg>
-                            Visualizar Material
-                        </PrimaryButton>
-                    </Link>
+                    <template v-if="isPassed || isAttemptsExhausted">
+                        <!-- Show only return home for completed or exhausted -->
+                        <Link href="/dashboard">
+                            <PrimaryButton class="w-full sm:w-auto">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                                </svg>
+                                Volver al Inicio
+                            </PrimaryButton>
+                        </Link>
+                    </template>
+                    <template v-else>
+                        <!-- Show material viewing for incomplete lessons -->
+                        <Link :href="route('empleado.courses.show', course.id)">
+                            <PrimaryButton class="w-full sm:w-auto">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                </svg>
+                                Visualizar Material
+                            </PrimaryButton>
+                        </Link>
 
-                    <Link href="/dashboard">
-                        <PrimaryButton variant="outline" class="w-full sm:w-auto">
-                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                            </svg>
-                            Volver al Inicio
-                        </PrimaryButton>
-                    </Link>
+                        <Link href="/dashboard">
+                            <PrimaryButton variant="outline" class="w-full sm:w-auto">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                                </svg>
+                                Volver al Inicio
+                            </PrimaryButton>
+                        </Link>
+                    </template>
                 </div>
             </div>
         </div>

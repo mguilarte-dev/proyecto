@@ -49,6 +49,15 @@ const chartOptions = {
 
         <div class="py-12">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+                <div class="mb-6 flex justify-end">
+                    <a
+                        href="/gerente/export-evaluaciones-pdf"
+                        target="_blank"
+                        class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:outline-none focus:border-indigo-700 focus:ring focus:ring-indigo-200 active:bg-indigo-600 disabled:opacity-25 transition"
+                    >
+                        Descargar Evaluaciones PDF
+                    </a>
+                </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <!-- Department Scores -->
                     <div class="bg-white dark:bg-gray-800 p-6 shadow sm:rounded-lg">
